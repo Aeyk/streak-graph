@@ -28,4 +28,8 @@ function gridData() {
     return data;
 }
 
-gridData();
+
+function setGridaAttr(grid, x, y, attr) {
+  grid[x][y]
+}
+
