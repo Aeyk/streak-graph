@@ -45,7 +45,7 @@ function gridData2() {
   let week_count = 1;
   for (var column = 0; column < 7; column++) {
     data.push( new Array() );
-    for (var row = 0; row < 3; row++) {      
+    for (var row = 0; row < 24; row++) {      
       data[column].push({
         x: xpos,
         y: ypos,
@@ -53,6 +53,7 @@ function gridData2() {
         height: height,
 	column: column,
 	row: row,
+	total: 0,
 	date: daysAgoFrom(today, column + (7 * row))
       })
       xpos += width;
@@ -64,6 +65,39 @@ function gridData2() {
 }
 
 
- function daysAgoFrom(date, days_ago) {
+function daysAgoFrom(date, days_ago) {
   return moment().subtract(days_ago, 'days')._d;
 }
+
+
+
+let clockStrExample =   `
+CLOCK: [2020-06-29 Mon 13:41]--[2020-06-29 Mon 14:22] =>  0:41
+  CLOCK: [2020-06-29 Mon 14:25]--[2020-06-29 Mon 15:05] =>  0:40
+  CLOCK: [2020-06-29 Mon 15:07]--[2020-06-29 Mon 15:28] =>  0:21
+  CLOCK: [2020-06-29 Mon 18:50]--[2020-06-29 Mon 19:06] =>  0:16
+  CLOCK: [2020-06-29 Mon 16:14]--[2020-06-29 Mon 17:42] =>  1:28
+  CLOCK: [2020-06-29 Mon 21:49]--[2020-06-29 Mon 22:24] =>  0:35
+  CLOCK: [2020-06-29 Mon 22:25]--[2020-06-29 Mon 23:25] =>  1:00
+  CLOCK: [2020-06-30 Tue 13:30]--[2020-07-01 Wed 17:56] => 28:26
+  CLOCK: [2020-07-01 Wed 15:05]--[2020-07-01 Wed 17:57] =>  2:52
+  CLOCK: [2020-07-05 Sun 21:52]
+`
+// should return a datestring?
+function parseDiaryClockString(clockStr) {
+  dateArray = []
+  splitOnNewLines(clockStr).forEach(clockStrLine => {
+    date = clockStrLine.match(/\d{4}-\d{2}-\d{2}/)[0]
+    dateArray.push(date)
+  })
+  frequencyMap = dateArray.reduce(countDuplicates, {})
+  return frequencyMap
+}
+function countDuplicates(obj, num){
+  obj[num] = (++obj[num] || 1);
+  return obj;
+}
+function splitOnNewLines(str) {
+  return str.split(/\n/).filter(s => s.length !== 0);
+}
+
