@@ -34,8 +34,8 @@
 	  .attr("class", "row");
 
       var colorScale = d3.scaleThreshold()
-	  .domain(_.range(0, 9))
-	  .range(d3.schemeBlues[0, 1, 2, 3, 4, 5, 6, 7, 8]);
+	  .domain(_.range(0, 6))
+	  .range(d3.schemeBlues[0, 1, 2, 3, 4, 5, 6]);
       
       var cell = row.selectAll(".square")
 	  .data(function(d) { return d; })
@@ -49,19 +49,10 @@
 	  .attr("fill", (d, i) => {
 	    d.date = moment(d.date).format(moment.HTML5_FMT.DATE)
 	    d.total = frequencyStreak[d.date] || 0;
+	    ;
 	    return colorScale(d.total);
 	  })
       
-["2020-05-06",
-"2020-05-12",
-"2020-05-12",
-"2020-05-12",
-"2020-05-13",
-"2020-06-23",
-"2020-06-24",
-"2020-06-29",
-"2020-06-30",
-"2020-07-05"]
     </script>
   </body>
 </html>
