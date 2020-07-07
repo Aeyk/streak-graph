@@ -41,20 +41,17 @@
 	  .data(function(d) { return d; })
 	  .enter().append("rect")
 	  .attr("class","square")
+	  .attr("stroke-width", 2)
 	  .attr("x", function(d) { return d.x; })
 	  .attr("y", function(d) { return d.y; })
 	  .attr("width", function(d) { return d.width; })
 	  .attr("height", function(d) { return d.height; })
-      	  .attr("fill", (d) => {
+	  .attr("fill", (d, i) => {
 	    d.date = moment(d.date).format(moment.HTML5_FMT.DATE)
 	    d.total = frequencyStreak[d.date] || 0;
 	    return colorScale(d.total);
-	  }).on("click", (d, i)=>{
-	    console.log(d)
 	  })
       
-      
-	    
     </script>
   </body>
 </html>

@@ -2,8 +2,8 @@ function gridData() {
   var data = new Array();
   var xpos = 1; //starting xpos and ypos at 1 so the stroke will show when we make the grid below
   var ypos = 1;
-  var width = 12;
-  var height = 12;
+  var width = 32;
+  var height = 32;
   let max = 8 * 4 * 6;
   // iterate for rows 
   for (var row = 0; row < 8; row++) {
@@ -37,8 +37,8 @@ function gridData2() {
   var data = new Array();
   var xpos = 1; //starting xpos and ypos at 1 so the stroke will show when we make the grid below
   var ypos = 1;
-  var width = 12;
-  var height = 12;
+  var width = 16;
+  var height = 16;
   let max = 7 * 2;
   let today = new Date();
   let day_count = 1;
