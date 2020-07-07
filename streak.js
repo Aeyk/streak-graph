@@ -87,4 +87,31 @@ function countDuplicates(obj, num){
 function splitOnNewLines(str) {
   return str.split(/\n/).filter(s => s.length !== 0);
 }
+// takes array of datestrings YYYY-MM-DD
+function makeDateCounter(datestringArray) {
+  let _counter = datestringArray.reduce(countDuplicates, {})
+  concat = function(other_counter) {
+    
+    let conflicts = _.intersection(Object.keys(other_counter), Object.keys(_counter))
 
+    let mergedConflicts = [];
+    _.forEach(conflicts, conflict => {
+      mergedConflict = {};
+      mergedConflict[conflict] =  _counter[conflict] + other_counter[conflict];
+      mergedConflicts.push(mergedConflict);
+    })
+    
+    
+    this._counter = _.mergeWith(this._counter, mergedConflict, (old, older) => {
+      if(_.isArray(old)) {
+	return old.concat(older);
+      }
+    })
+    return this;
+  }
+
+  size = function() {
+    return Object.keys(datestringArray).length
+  }
+  return { concat, size, _counter};
+}  
