@@ -86,6 +86,8 @@ CLOCK: [2020-06-29 Mon 13:41]--[2020-06-29 Mon 14:22] =>  0:41
   CLOCK: [2020-07-06 Sun 21:52]
   CLOCK: [2020-07-05 Sun 21:52]
 `
+
+
 // should return a datestring?
 function parseDiaryClockString(clockStr) {
   dateArray = []
@@ -94,12 +96,29 @@ function parseDiaryClockString(clockStr) {
     dateArray.push(date)
   })
   frequencyMap = dateArray.reduce(countDuplicates, {})
-  return frequencyMap
+
+  return   moreDates.reduce(countDuplicates, {...frequencyMap});
 }
+
+let moreDates = ["2020-05-06",
+"2020-05-12",
+"2020-05-12",
+"2020-05-12",
+"2020-05-13",
+"2020-06-23",
+"2020-06-24",
+"2020-06-29",
+"2020-06-30",
+"2020-07-05"]
+
+
+
 function countDuplicates(obj, num){
   obj[num] = (++obj[num] || 1);
   return obj;
 }
+
+
 function splitOnNewLines(str) {
   return str.split(/\n/).filter(s => s.length !== 0);
 }
