@@ -102,11 +102,7 @@ function makeDateCounter(datestringArray) {
     })
     
     
-    this._counter = _.mergeWith(this._counter, mergedConflict, (old, older) => {
-      if(_.isArray(old)) {
-	return old.concat(older);
-      }
-    })
+    this._counter = _.mergeWith(this._counter, other_counter, (x, y) => x ? x + y : y)
     return this;
   }
 
