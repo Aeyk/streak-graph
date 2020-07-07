@@ -89,19 +89,8 @@ function splitOnNewLines(str) {
 }
 // takes array of datestrings YYYY-MM-DD
 function makeDateCounter(datestringArray) {
-  let counter = datestringArray.reduce(countDuplicates, {})
+  let counter = _.countBy(dateStringArray)
   combine = function(othercounter) {
-    
-    let conflicts = _.intersection(Object.keys(othercounter), Object.keys(counter))
-
-    let mergedConflicts = [];
-    _.forEach(conflicts, conflict => {
-      mergedConflict = {};
-      mergedConflict[conflict] =  counter[conflict] + othercounter[conflict];
-      mergedConflicts.push(mergedConflict);
-    })
-    
-    
     this.counter = _.mergeWith(this.counter, othercounter, (x, y) => x ? x + y : y)
     return this;
   }
