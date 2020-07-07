@@ -90,7 +90,7 @@ function splitOnNewLines(str) {
 // takes array of datestrings YYYY-MM-DD
 function makeDateCounter(datestringArray) {
   let _counter = datestringArray.reduce(countDuplicates, {})
-  concat = function(other_counter) {
+  combine = function(other_counter) {
     
     let conflicts = _.intersection(Object.keys(other_counter), Object.keys(_counter))
 
@@ -113,5 +113,5 @@ function makeDateCounter(datestringArray) {
   size = function() {
     return Object.keys(datestringArray).length
   }
-  return { concat, size, _counter};
+  return { combine, size, _counter};
 }  
