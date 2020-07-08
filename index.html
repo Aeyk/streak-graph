@@ -14,11 +14,15 @@
     <link href="style.css" rel="stylesheet"/>
   </head>
   <body>
-    <input type="range" id="total" min="0" max="7"> 
+    <input type="range" id="total" min="0" max="7">
+    <button id="saveButton">SAVE</button>
     <div class="grid"></div>
     <script src="./streak.js"></script>
     
     <script>
+      saveButton.addEventListener("mousedown", e => {
+	console.log(document.querySelector("[type=range]").value)
+      })
       let clickStack = [];
       
       let frequencyStreak = parseDiaryClockString(clockStrExample)
@@ -62,7 +66,6 @@
 
       total.addEventListener("input", e => {
 	document.querySelectorAll(".active").forEach(active => {
-	  
 	  d3.select(active).attr("fill", (d, i) => {
 	    console.log(d.total, e.target.value)
 	    return colorScale(e.target.value)
@@ -74,6 +77,8 @@
 
       document.querySelectorAll(".square").forEach(square => {
 	square.addEventListener("mousedown", (e) => {
+	  document.querySelectorAll(".active")
+	    .forEach(active => active.classList.toggle("active"))
 	  e.target.classList.toggle("active")
 	  console.log(document.querySelectorAll(".active"))
         })
