@@ -14,13 +14,21 @@
     <link href="style.css" rel="stylesheet"/>
   </head>
   <body>
+<<<<<<< HEAD
     Press control to select multiple, use slider to darken. <br/>
     <input type="range" id="total" min="0" max="7">
     <!--     <button id="saveButton">SAVE</button> -->
+=======
+    <input type="range" id="total" min="0" max="7">
+    <button id="saveButton">SAVE</button>
+>>>>>>> 7ce4913822739b8e592c672dbd7244926c320e60
     <div class="grid"></div>
     <script src="./streak.js"></script>
     
     <script>
+      saveButton.addEventListener("mousedown", e => {
+	console.log(document.querySelector("[type=range]").value)
+      })
       let clickStack = [];
       
       let frequencyStreak = parseDiaryClockString(clockStrExample)
@@ -76,10 +84,15 @@
 
       document.querySelectorAll(".square").forEach(square => {
 	square.addEventListener("mousedown", (e) => {
+<<<<<<< HEAD
 	  if(!e.ctrlKey) { 
 	    document.querySelectorAll(".active")
 	      .forEach(active => active.classList.toggle("active"))
 	  }
+=======
+	  document.querySelectorAll(".active")
+	    .forEach(active => active.classList.toggle("active"))
+>>>>>>> 7ce4913822739b8e592c672dbd7244926c320e60
 	  e.target.classList.toggle("active")
 	  console.log(document.querySelectorAll(".active"))
         })
