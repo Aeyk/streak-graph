@@ -14,7 +14,9 @@
     <link href="style.css" rel="stylesheet"/>
   </head>
   <body>
-    <input type="range" id="total" min="0" max="7"> 
+    Press control to select multiple, use slider to darken. <br/>
+    <input type="range" id="total" min="0" max="7">
+    <!--     <button id="saveButton">SAVE</button> -->
     <div class="grid"></div>
     <script src="./streak.js"></script>
     
@@ -58,11 +60,11 @@
 	    // console.log(this, d)
 	    // console.log(d3.select(d).classed("active", true))
 	    total.value = d.total
+	    document.body.title = d.total
 	  })
 
       total.addEventListener("input", e => {
 	document.querySelectorAll(".active").forEach(active => {
-	  
 	  d3.select(active).attr("fill", (d, i) => {
 	    console.log(d.total, e.target.value)
 	    return colorScale(e.target.value)
@@ -74,6 +76,10 @@
 
       document.querySelectorAll(".square").forEach(square => {
 	square.addEventListener("mousedown", (e) => {
+	  if(!e.ctrlKey) { 
+	    document.querySelectorAll(".active")
+	      .forEach(active => active.classList.toggle("active"))
+	  }
 	  e.target.classList.toggle("active")
 	  console.log(document.querySelectorAll(".active"))
         })

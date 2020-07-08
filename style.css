@@ -1,5 +1,20 @@
 .square {
     stroke: #e1e1e1;
+    stroke-width: 2px; 
 }
 
-body     { background-color: white;}
+body     { background-color: white;
+	     }
+
+
+form input[type=range], label{
+    display: inline!important;
+}
+
+label {
+
+}
+
+.active {
+    stroke: black;
+}
