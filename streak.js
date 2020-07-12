@@ -1,10 +1,82 @@
-function gridData2() {
+function oneDayGridData() {
+  var data = new Array();
+  var xpos = 1; //starting xpos and ypos at 1 so the stroke will show when we make the grid below
+  var ypos = 1;
+  var width = 64;
+  var height = 64;
+  let today = new Date();
+  var data = new Array();
+  data.push({
+    x: 1,
+    y: 1,
+    width: width,
+    height: height,
+    total: 0,
+    date: new Date() || today
+  })
+  return data;
+}
+
+function oneWeekGridData() {
+  var data = new Array();
+  var xpos = 1; 
+  var ypos = 1;
+  var width = 64;
+  var height = 64;
+  let today = new Date();
+  var data = new Array();
+  let counter = 7;
+  while(counter > 0) {
+    data.push({
+      x: xpos,
+      y: ypos,
+      width: width,
+      height: height,
+      total: 0,
+    date: new Date() || today
+    })
+    xpos += width
+    counter--;
+  }
+  return data;
+}
+
+function oneMonthGridData() {
+  var data = new Array();
+  var xpos = 1; //starting xpos and ypos at 1 so the stroke will show when we make the grid below
+  var ypos = 1;
+  var width = 32;
+  var height = 32;
+  let today = new Date();
+  let day_count = 1;
+  let week_count = 1;
+  for (var column = 0; column < 4; column++) {
+    data.push( new Array() );
+    for (var row = 0; row < 7; row++) {      
+      data[column].push({
+        x: xpos,
+        y: ypos,
+        width: width,
+        height: height,
+	column: column,
+	row: row,
+	total: 0,
+	date: daysAgoFrom(today, column + (7 * row))
+      })
+      xpos += width;
+    }
+    xpos = 1;
+    ypos += height;
+  }
+  return data;
+}
+
+function sixMonthGridData() {
   var data = new Array();
   var xpos = 1; //starting xpos and ypos at 1 so the stroke will show when we make the grid below
   var ypos = 1;
   var width = 16;
   var height = 16;
-  let max = 7 * 2;
   let today = new Date();
   let day_count = 1;
   let week_count = 1;
@@ -36,65 +108,13 @@ function daysAgoFrom(date, days_ago) {
 
 
 
-let clockStrExample =   `
-CLOCK: [2020-06-29 Mon 13:41]--[2020-06-29 Mon 14:22] =>  0:41
-  CLOCK: [2020-06-29 Mon 14:25]--[2020-06-29 Mon 15:05] =>  0:40
-  CLOCK: [2020-06-29 Mon 15:07]--[2020-06-29 Mon 15:28] =>  0:21
-  CLOCK: [2020-06-29 Mon 18:50]--[2020-06-29 Mon 19:06] =>  0:16
-  CLOCK: [2020-06-29 Mon 16:14]--[2020-06-29 Mon 17:42] =>  1:28
-  CLOCK: [2020-06-29 Mon 21:49]--[2020-06-29 Mon 22:24] =>  0:35
-  CLOCK: [2020-06-29 Mon 22:25]--[2020-06-29 Mon 23:25] =>  1:00
-  CLOCK: [2020-06-30 Tue 13:30]--[2020-07-01 Wed 17:56] => 28:26
-  CLOCK: [2020-07-01 Wed 15:05]--[2020-07-01 Wed 17:57] =>  2:52
-  CLOCK: [2020-07-06 Mon 12:53]--[2020-07-06 Mon 16:54] =>  4:01
-  CLOCK: [2020-07-06 Sun 21:52]
-  CLOCK: [2020-07-06 Sun 21:52]
-  CLOCK: [2020-07-05 Sun 21:52]
-`
-
+let clockStrExample =   ``
+let moreDates = [];
 
 // should return a datestring?
 function parseDiaryClockString(clockStr) {
   return   moreDates.reduce(countDuplicates, {});
 }
-
-let moreDates = ["2020-05-06",
-		 "2020-05-12",
-		 "2020-05-12",
-		 "2020-05-12",
-		 "2020-05-13",
-		 "2020-06-23",
-		 "2020-06-24",
-		 "2020-06-29",
-		 "2020-06-29",
-		 "2020-06-29",
-		 "2020-06-29",
-		 "2020-06-29",
-		 "2020-06-29",
-		 "2020-06-29",
-		 "2020-06-29",
-		 "2020-06-29",
-		 "2020-06-29",
-		 "2020-06-29",
-		 "2020-06-29",
-		 "2020-06-29",
-		 "2020-06-29",
-		 "2020-06-29",
-		 "2020-06-30",
-		 "2020-06-30",
-		 "2020-07-01",
-		 "2020-07-01",
-		 "2020-07-01",
-		 "2020-07-05",
-		 "2020-07-05",
-		 "2020-07-05",
-		 "2020-07-06",
-		 "2020-07-06",
-		 "2020-07-07",
-		 "2020-07-07",
-		 "2020-07-07",
-		 "2020-07-07"];
-
 
 
 function countDuplicates(obj, num){
@@ -102,14 +122,14 @@ function countDuplicates(obj, num){
   return obj;
 }
 
-
 function splitOnNewLines(str) {
   return str.split(/\n/).filter(s => s.length !== 0);
 }
-// takes array of datestrings YYYY-MM-DD
+// takes array of datestrings YYYY-MM-DD output { string: number }
+// with each key being uniq and number being the occurance rate
 function makeDateCounter(datestringArray) {
   let counter = _.countBy(dateStringArray)
-  combine = function(othercounter) {
+  concat = function(othercounter) {
     this.counter = _.mergeWith(this.counter, othercounter, (x, y) => x ? x + y : y)
     return this;
   }

@@ -14,15 +14,78 @@
     <link href="style.css" rel="stylesheet"/>
   </head>
   <body>
-    <input type="range" id="total" min="0" max="7">
+    <input type="range" id="total" min="0" max="7" id="slider">
     <button id="saveButton">SAVE</button>
-    <div class="grid"></div>
-    <script src="./streak.js"></script>
+    <h1><a href="#" id="leftButton">&lt</a></h1>
+
+    <div class="one-day-grid vis"></div>
+    <div class="one-week-grid hidden"></div>
+    <div class="one-month-grid hidden"></div>
+    <div class="six-month-grid hidden"></div>
+    <h1><a id="rightButton" href="">&gt</a></h1>
     
+    
+    <script src="./streak.js"></script>    
     <script>
-      saveButton.addEventListener("mousedown", e => {
-	console.log(document.querySelector("[type=range]").value)
+      // saveButton.addEventListener("mousedown", e => {
+      // 	console.log(document.querySelector("[type=range]").value)
+      // })
+
+      let leftLink= document.querySelector("#leftButton"); 
+      let rightLink  = document.querySelector("#rightButton");
+      let visibleGrid = document.querySelector(".vis");
+      let hiddenGrids = document.querySelectorAll(".hidden");
+      let currentView = 0;
+      let slider = document.querySelector("input#total")
+
+      leftLink.addEventListener("click", (e) => {
+	e.preventDefault();
+	visibleGrid.classList.remove("vis");
+	visibleGrid.classList.add("hidden");
+
+
+	if(currentView >= 3) {
+	  currentView = 0
+	}
+	if(currentView < 0) {
+	  currentView = 2
+	}
+	
+	hiddenGrids[currentView].classList.remove("hidden");
+	hiddenGrids[currentView].classList.add("vis");
+
+	currentView -= 1
+	
+	hiddenGrids = document.querySelectorAll(".hidden");
+	visibleGrid = document.querySelector(".vis");
+	console.log(currentView)
       })
+
+      
+      rightLink.addEventListener("click", (e) => {
+	e.preventDefault();
+	visibleGrid.classList.remove("vis");
+	visibleGrid.classList.add("hidden");
+
+
+	if(currentView >= 3) {
+	  currentView = 0
+	}
+	if(currentView < 0) {
+	  currentView = 2
+	}
+
+	hiddenGrids[currentView].classList.remove("hidden");
+	hiddenGrids[currentView].classList.add("vis");
+
+	currentView += 1
+
+	
+	hiddenGrids = document.querySelectorAll(".hidden");
+	visibleGrid = document.querySelector(".vis");
+
+      })
+
       let clickStack = [];
       
       let frequencyStreak = parseDiaryClockString(clockStrExample)
@@ -31,21 +94,25 @@
 	  width = 960 - margin.left - margin.right,
 	  height = 500 - margin.top - margin.bottom;
 
-      var grid = d3.select(".grid")
-          .append("svg")
-	  .attr("width","510px")
-	  .attr("height","510px")
-      
-      var row = grid.selectAll(".row")
-	  .data(gridData2)
-	  .enter().append("g")
-	  .attr("class", "row");
 
+
+      var oneWeekGrid = d3.select(".one-week-grid")
+          .append("svg").attr("width","99%")
+      
       var colorScale = d3.scaleThreshold()
 	  .domain(_.range(0, 6))
 	  .range(d3.schemeBlues[0, 1, 2, 3, 4, 5, 6]);
+
+
+      var sixMonthGrid = d3.select(".six-month-grid")
+          .append("svg").attr("width","99%")
+
+      var rowOfSixMonthGrid = sixMonthGrid.selectAll(".row")
+	  .data(sixMonthGridData)
+	  .enter().append("g")
+	  .attr("class", "row");
       
-      var cell = row.selectAll(".square")
+      var cellOfSixMonthGrid = rowOfSixMonthGrid.selectAll(".square")
 	  .data(function(d) { return d; })
 	  .enter().append("rect")
 	  .attr("class","square")
@@ -65,6 +132,87 @@
 	    document.body.title = d.total
 	  })
 
+      var rowOfOneWeek = oneWeekGrid.selectAll(".row")
+	  .data(oneWeekGridData)
+      	  .enter().append("g").append("rect")
+	  .attr("class", "square")
+      	  .attr("x", function(d) { return d.x; })
+	  .attr("y", function(d) { return d.y; })
+	  .attr("width", function(d) { return d.width; })
+	  .attr("height", function(d) { return d.height; })
+      	  .attr("stroke-width", 2)
+	  .attr("fill", (d, i) => {
+	    d.date = moment(d.date).format(moment.HTML5_FMT.DATE)
+	    d.total = frequencyStreak[d.date] || 0;
+	    console.log(d)
+	    return colorScale(d.total);
+	  });
+      
+      var oneDayGrid = d3.select(".one-day-grid")
+          .append("svg").attr("width","50%")
+      //	  .attr("width","auto")
+      //	  .attr("height","auto")
+
+      var tooltip = d3.select("body")
+	  .append("div")
+	  .style("position", "absolute")
+	  .style("z-index", "10")
+	  .style("visibility", "hidden")
+	  .text(new Date());
+      
+      var oneDayCell = oneDayGrid.selectAll(".row")
+	  .data(oneDayGridData)
+      	  .enter().append("g").append("rect")
+	  .attr("class", "square")
+      	  .attr("x", function(d) { return d.x; })
+	  .attr("y", function(d) { return d.y; })
+	  .attr("width", function(d) { return d.width; })
+	  .attr("height", function(d) { return d.height; })
+      	  .attr("stroke-width", 2)
+	  .on("click",() => {
+	    slider.classList.add("active")
+	  })
+	  .on("mouseover", () => { tooltip.style("visibility", "visible");})
+	  .on("mousemove", () => { tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
+	  .on("mouseout", () => { tooltip.style("visibility", "hidden");})
+     	  .attr("fill", (d, i) => {
+	    d.date = moment(d.date).format(moment.HTML5_FMT.DATE)
+	    d.total = frequencyStreak[d.date] || 0;
+	    console.log(d)
+	    return colorScale(d.total);
+	  });
+      
+
+      var oneMonthGrid = d3.select(".one-month-grid")
+          .append("svg")
+	  .attr("width","99%")
+	  .attr("height","250px");
+
+      var rowOfOneMonthGrid = oneMonthGrid.selectAll(".row")
+	  .data(oneMonthGridData)
+	  .enter().append("g")
+	  .attr("class", "row");
+      
+      var cellOfOneMonthGrid = rowOfOneMonthGrid.selectAll(".square")
+	  .data(function(d) { return d; })
+	  .enter().append("rect")
+	  .attr("class","square")
+	  .attr("stroke-width", 2)
+	  .attr("x", function(d) { return d.x; })
+	  .attr("y", function(d) { return d.y; })
+	  .attr("width", function(d) { return d.width; })
+	  .attr("height", function(d) { return d.height; })
+	  .attr("fill", (d, i) => {
+	    d.date = moment(d.date).format(moment.HTML5_FMT.DATE)
+	    d.total = frequencyStreak[d.date] || 0;
+	    return colorScale(d.total);
+	  }).on("mousedown", (d, i) => {
+	    // console.log(this, d)
+	    // console.log(d3.select(d).classed("active", true))
+	    total.value = d.total
+	    document.body.title = d.total
+	  })
+      
       total.addEventListener("input", e => {
 	document.querySelectorAll(".active").forEach(active => {
 	  d3.select(active).attr("fill", (d, i) => {
@@ -76,6 +224,9 @@
 	
       })
 
+
+      // if you click it selects that square as active
+      // if you ctrl-click it multi-selects
       document.querySelectorAll(".square").forEach(square => {
 	square.addEventListener("mousedown", (e) => {
 	  if(!e.ctrlKey) { 
@@ -87,7 +238,7 @@
         })
       })
       
-
+      
     </script>
   </body>
 </html>

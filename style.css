@@ -14,3 +14,24 @@ form input[type=range], label{
 label {
 
 }
+
+.one-day-grid,
+.one-week-grid,
+.one-month-grid,
+.dix-month-grid, svg {
+    text-align: center;
+    display: block;
+}
+.hidden {
+    display: none;!important
+}
+
+h1 > a {
+    width: 100%;
+    text-justify: center;
+    text-decoration: none;
+}
+
+form input[type=range].active {
+    background-color: red;
+}
