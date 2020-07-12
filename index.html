@@ -25,7 +25,10 @@
     <h1><a id="rightButton" href="">&gt</a></h1>
     
     
-    <script src="./streak.js"></script>    
+    <script src="./streak.js"></script>
+    <script src="./util.js"></script>
+    <script src="./one_day_grid.js"></script>
+    
     <script>
       // saveButton.addEventListener("mousedown", e => {
       // 	console.log(document.querySelector("[type=range]").value)
@@ -88,7 +91,7 @@
 
       let clickStack = [];
       
-      let frequencyStreak = parseDiaryClockString(clockStrExample)
+      //let frequencyStreak = parseDiaryClockString(clockStrExample)
 
       var margin = {top: 20, right: 20, bottom: 50, left: 70},
 	  width = 960 - margin.left - margin.right,
@@ -99,11 +102,6 @@
       var oneWeekGrid = d3.select(".one-week-grid")
           .append("svg").attr("width","99%")
       
-      var colorScale = d3.scaleThreshold()
-	  .domain(_.range(0, 6))
-	  .range(d3.schemeBlues[0, 1, 2, 3, 4, 5, 6]);
-
-
       var sixMonthGrid = d3.select(".six-month-grid")
           .append("svg").attr("width","99%")
 
@@ -123,7 +121,7 @@
 	  .attr("height", function(d) { return d.height; })
 	  .attr("fill", (d, i) => {
 	    d.date = moment(d.date).format(moment.HTML5_FMT.DATE)
-	    d.total = frequencyStreak[d.date] || 0;
+	    d.total =  0;
 	    return colorScale(d.total);
 	  }).on("mousedown", (d, i) => {
 	    // console.log(this, d)
@@ -131,7 +129,19 @@
 	    total.value = d.total
 	    document.body.title = d.total
 	  })
+      	  .on("mouseover", (e) => {
+	    oneDayTooltip.text(formatDate(e.date));
+	    oneDayTooltip.style("visibility", "visible");})
+	  .on("mousemove", () => { oneDayTooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
+	  .on("mouseout", () => { oneDayTooltip.style("visibility", "hidden");})
 
+      var oneWeekTooltip = d3.select("body")
+      	  .data(oneWeekGridData)
+	  .append("div")
+	  .style("position", "absolute")
+	  .style("z-index", "10")
+	  .style("visibility", "hidden")
+      
       var rowOfOneWeek = oneWeekGrid.selectAll(".row")
 	  .data(oneWeekGridData)
       	  .enter().append("g").append("rect")
@@ -141,48 +151,33 @@
 	  .attr("width", function(d) { return d.width; })
 	  .attr("height", function(d) { return d.height; })
       	  .attr("stroke-width", 2)
+	  .on("mouseover", (e) => {
+	    console.log(e)
+	    oneWeekTooltip.text(formatDate(e.date));
+	    oneWeekTooltip.style("visibility", "visible");
+				   
+})
+	  .on("mousemove", () => { oneWeekTooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
+	  .on("mouseout", () => { oneWeekTooltip.style("visibility", "hidden");})
+
 	  .attr("fill", (d, i) => {
 	    d.date = moment(d.date).format(moment.HTML5_FMT.DATE)
-	    d.total = frequencyStreak[d.date] || 0;
+	    d.total = 0;
 	    console.log(d)
 	    return colorScale(d.total);
 	  });
-      
-      var oneDayGrid = d3.select(".one-day-grid")
-          .append("svg").attr("width","50%")
-      //	  .attr("width","auto")
-      //	  .attr("height","auto")
 
-      var tooltip = d3.select("body")
+      
+
+      var oneMonthTooltip = d3.select("body")
+      	  .data(oneMonthGridData)
 	  .append("div")
 	  .style("position", "absolute")
 	  .style("z-index", "10")
 	  .style("visibility", "hidden")
-	  .text(new Date());
-      
-      var oneDayCell = oneDayGrid.selectAll(".row")
-	  .data(oneDayGridData)
-      	  .enter().append("g").append("rect")
-	  .attr("class", "square")
-      	  .attr("x", function(d) { return d.x; })
-	  .attr("y", function(d) { return d.y; })
-	  .attr("width", function(d) { return d.width; })
-	  .attr("height", function(d) { return d.height; })
-      	  .attr("stroke-width", 2)
-	  .on("click",() => {
-	    slider.classList.add("active")
-	  })
-	  .on("mouseover", () => { tooltip.style("visibility", "visible");})
-	  .on("mousemove", () => { tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
-	  .on("mouseout", () => { tooltip.style("visibility", "hidden");})
-     	  .attr("fill", (d, i) => {
-	    d.date = moment(d.date).format(moment.HTML5_FMT.DATE)
-	    d.total = frequencyStreak[d.date] || 0;
-	    console.log(d)
-	    return colorScale(d.total);
-	  });
-      
 
+
+      
       var oneMonthGrid = d3.select(".one-month-grid")
           .append("svg")
 	  .attr("width","99%")
@@ -202,15 +197,20 @@
 	  .attr("y", function(d) { return d.y; })
 	  .attr("width", function(d) { return d.width; })
 	  .attr("height", function(d) { return d.height; })
+      	  .on("mouseover", (e) => {
+	    oneDayTooltip.text(formatDate(e.date));
+	    oneDayTooltip.style("visibility", "visible");})
+	  .on("mousemove", () => { oneDayTooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
+	  .on("mouseout", () => { oneDayTooltip.style("visibility", "hidden");})
+ 
 	  .attr("fill", (d, i) => {
 	    d.date = moment(d.date).format(moment.HTML5_FMT.DATE)
-	    d.total = frequencyStreak[d.date] || 0;
+	    d.total = 0;
 	    return colorScale(d.total);
 	  }).on("mousedown", (d, i) => {
 	    // console.log(this, d)
 	    // console.log(d3.select(d).classed("active", true))
 	    total.value = d.total
-	    document.body.title = d.total
 	  })
       
       total.addEventListener("input", e => {

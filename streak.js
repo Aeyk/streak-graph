@@ -1,22 +1,3 @@
-function oneDayGridData() {
-  var data = new Array();
-  var xpos = 1; //starting xpos and ypos at 1 so the stroke will show when we make the grid below
-  var ypos = 1;
-  var width = 64;
-  var height = 64;
-  let today = new Date();
-  var data = new Array();
-  data.push({
-    x: 1,
-    y: 1,
-    width: width,
-    height: height,
-    total: 0,
-    date: new Date() || today
-  })
-  return data;
-}
-
 function oneWeekGridData() {
   var data = new Array();
   var xpos = 1; 
@@ -25,18 +6,18 @@ function oneWeekGridData() {
   var height = 64;
   let today = new Date();
   var data = new Array();
-  let counter = 7;
-  while(counter > 0) {
+  let counter = 0;
+  while(counter <= 7) {
     data.push({
       x: xpos,
       y: ypos,
       width: width,
       height: height,
       total: 0,
-    date: new Date() || today
+      date: daysAgoFrom(today, counter)
     })
     xpos += width
-    counter--;
+    counter++;
   }
   return data;
 }
@@ -50,9 +31,9 @@ function oneMonthGridData() {
   let today = new Date();
   let day_count = 1;
   let week_count = 1;
-  for (var column = 0; column < 4; column++) {
+  for (var column = 0; column < 7; column++) {
     data.push( new Array() );
-    for (var row = 0; row < 7; row++) {      
+    for (var row = 0; row < 4; row++) {      
       data[column].push({
         x: xpos,
         y: ypos,
@@ -102,11 +83,6 @@ function sixMonthGridData() {
 }
 
 
-function daysAgoFrom(date, days_ago) {
-  return moment().subtract(days_ago, 'days')._d;
-}
-
-
 
 let clockStrExample =   ``
 let moreDates = [];
@@ -116,15 +92,6 @@ function parseDiaryClockString(clockStr) {
   return   moreDates.reduce(countDuplicates, {});
 }
 
-
-function countDuplicates(obj, num){
-  obj[num] = (++obj[num] || 1);
-  return obj;
-}
-
-function splitOnNewLines(str) {
-  return str.split(/\n/).filter(s => s.length !== 0);
-}
 // takes array of datestrings YYYY-MM-DD output { string: number }
 // with each key being uniq and number being the occurance rate
 function makeDateCounter(datestringArray) {
